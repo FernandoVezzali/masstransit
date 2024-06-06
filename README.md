@@ -200,8 +200,6 @@ Summary
  
 By following these steps, you can effectively handle invalid messages and ensure they are not retried, while still retaining the ability to analyze and resolve the issues causing them to be invalid.
 
-----
-
 ## Poison Message VS Invalid Message
 
 An invalid message can be considered a poison message, but they are not always the same thing. Here's the distinction:
@@ -219,3 +217,23 @@ An invalid message is one that fails validation based on business rules or schem
 - Missing required fields
 - Data values out of acceptable ranges
 - Violation of business rules
+
+## Naming conventions
+
+Naming conventions for dead-letter topics and error queues should be clear and consistent, making it easy to understand their purpose. For a regular topic named add-transaction, here are some examples:
+
+### Dead-Letter Topic
+A dead-letter topic is typically used for messages that cannot be processed and need to be revisited or analyzed later.
+
+- add-transaction-dlt
+- add-transaction-dead-letter
+- add-transaction-dlq (dead-letter queue)
+- add-transaction-failed
+
+### Error Queue
+An error queue is used to capture messages that fail validation or processing due to errors.
+
+- add-transaction-error
+- add-transaction-error-queue
+- add-transaction-err
+- add-transaction-invalid
