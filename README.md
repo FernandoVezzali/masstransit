@@ -37,7 +37,7 @@ var busControl = Bus.Factory.CreateUsingKafka(cfg =>
 });
 ```
 
-## Using a Dead-Letter Topic
+## Sending Message to a Dead-Letter Topic
 
 ```
 public class YourConsumer : IConsumer<YourMessage>
@@ -157,3 +157,45 @@ public class InvalidMessageConsumer : IConsumer<YourMessage>
     }
 }
 ```
+
+Step 2: Configure the Consumer with Error Handling
+Configure your MassTransit bus to use the error queue.
+
+```
+var busControl = Bus.Factory.CreateUsingKafka(cfg =>
+{
+    cfg.Host("localhost:9092");
+
+    cfg.ReceiveEndpoint("your-topic", e =>
+    {
+        e.Consumer<InvalidMessageConsumer>();
+    });
+
+    cfg.ReceiveEndpoint("error-queue", e =>
+    {
+        e.Consumer<ErrorConsumer>(); // Consumer to handle invalid messages if needed
+    });
+});
+```
+
+Step 3: Implement the ErrorConsumer (Optional)
+If you want to process or log messages in the error queue, you can implement an ErrorConsumer.
+
+```
+public class ErrorConsumer : IConsumer<YourMessage>
+{
+    public async Task Consume(ConsumeContext<YourMessage> context)
+    {
+        // Implement your logic to handle messages in the error queue
+        Console.WriteLine($"Error queue received message: {context.Message}");
+    }
+}
+```
+
+Summary
+- Validation: Validate the message and determine if it is invalid.
+- Logging: Log detailed information about the invalid message.
+- Error Handling: Send the invalid message to an error queue or topic for further analysis.
+- Acknowledgement: Acknowledge the message to prevent retries.
+- 
+By following these steps, you can effectively handle invalid messages and ensure they are not retried, while still retaining the ability to analyze and resolve the issues causing them to be invalid.
