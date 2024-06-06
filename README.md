@@ -197,5 +197,25 @@ Summary
 - Logging: Log detailed information about the invalid message.
 - Error Handling: Send the invalid message to an error queue or topic for further analysis.
 - Acknowledgement: Acknowledge the message to prevent retries.
-- 
+ 
 By following these steps, you can effectively handle invalid messages and ensure they are not retried, while still retaining the ability to analyze and resolve the issues causing them to be invalid.
+
+----
+
+## Poison Message VS Invalid Message
+
+An invalid message can be considered a poison message, but they are not always the same thing. Here's the distinction:
+
+### Poison Message
+A poison message is a message that cannot be processed by a consumer due to some issue, often resulting in repeated failures. Poison messages typically cause the consumer to crash or retry indefinitely, which can disrupt normal processing. Common reasons for poison messages include:
+
+- Corrupt data
+- Format errors
+- Logic errors in the consumer
+
+### Invalid Message
+An invalid message is one that fails validation based on business rules or schema requirements. It is a broader term that includes any message deemed not suitable for processing. Reasons for invalid messages can include:
+
+- Missing required fields
+- Data values out of acceptable ranges
+- Violation of business rules
